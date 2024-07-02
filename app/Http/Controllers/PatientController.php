@@ -60,12 +60,18 @@ class PatientController extends Controller
                 }
             }
 
+            if ($request->has('address')) {
+                $request->validate(Address::rules(), Address::feedbacks());
+        
+                $patient->address->update($request->input('address'));
+            }
+
             $request->validate($regrasDinamicas, Patient::feedbacks());
         } else {
             $request->validate(Patient::rules(), Patient::feedbacks());
         }
 
-        $patient->fill($request->all());
+        $patient->fill($request->except('address'));
 
         $patient->save();
 
@@ -77,11 +83,23 @@ class PatientController extends Controller
         $patients = Patient::query();
 
         if ($request->has('name')) {
-            $patients->where('name', 'LIKE', '%'.$request->name.'%');
+            $patients->where('name', 'LIKE', '%' . $request->name . '%');
         }
 
-        $patients = $patients->paginate();
+        $patients = $patients->with('address')->paginate();
 
         return response()->json($patients, 200);
+    }
+
+    public function delete($id)
+    {
+        $patient = Patient::find($id);
+
+        if ($patient) {
+            $patient->delete();
+            return response()->json("Paciente deletado com sucesso!", 200);
+        } else {
+            return response()->json("Paciente não encontrado!", 404);
+        }
     }
 }
