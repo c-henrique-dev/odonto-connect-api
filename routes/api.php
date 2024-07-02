@@ -13,12 +13,14 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/create', [PatientController::class, 'store']);
         Route::patch('/update/{id}', [PatientController::class, 'update']);
         Route::get('/list', [PatientController::class, 'index']);
+        Route::delete('/delete/{id}', [PatientController::class, 'delete']);
     });
 
     Route::prefix('dentist')->group(function () {
         Route::post('/create', [DentistController::class, 'store']);
         Route::patch('/update/{id}', [DentistController::class, 'update']);
         Route::get('/list', [DentistController::class, 'index']);
+        Route::delete('/delete/{id}', [DentistController::class, 'delete']);
     });
 
     Route::prefix('scheduling')->group(function () {
