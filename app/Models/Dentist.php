@@ -12,6 +12,10 @@ class Dentist extends Model
 
     protected $hidden = ['address_id'];
 
+    protected $fillable = [
+        'name',
+    ];
+
     public function schedulings(): HasMany
     {
         return $this->hasMany(Scheduling::class);

@@ -10,6 +10,13 @@ class Address extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'street',
+        'city',
+        'number',
+        'cep'
+    ];
+
     public function dentist(): HasOne
     {
         return $this->hasOne(Dentist::class);
