@@ -25,9 +25,10 @@ class MedicalRecordController extends Controller
         $medicalRecord->patient()->associate($patient);
 
         $attachment = $request->attachment;
-        $attachment->store();
 
-        $medicalRecord->attachment = $attachment->getClientOriginalName();
+        $path = $attachment->store();
+
+        $medicalRecord->attachment = $path;
 
         $medicalRecord->save();
 
