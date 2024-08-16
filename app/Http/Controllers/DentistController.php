@@ -55,18 +55,12 @@ class DentistController extends Controller
                 }
             }
 
-            if ($request->has('address')) {
-                $request->validate(Address::rules(), Address::feedbacks());
-
-                $dentist->address->update($request->input('address'));
-            }
-
             $request->validate($regrasDinamicas, Dentist::feedbacks());
         } else {
             $request->validate(Dentist::rules(), Dentist::feedbacks());
         }
 
-        $dentist->fill($request->except('address'));
+        $dentist->fill($request->all());
 
         $dentist->save();
 
@@ -78,17 +72,5 @@ class DentistController extends Controller
         $dentists = Dentist::with('address')->paginate();
 
         return response()->json($dentists, 200);
-    }
-
-    public function delete($id)
-    {
-        $dentist = Dentist::find($id);
-
-        if ($dentist) {
-            $dentist->delete();
-            return response()->json("Dentista deletado com sucesso!", 200);
-        } else {
-            return response()->json("Dentista não encontrado!", 404);
-        }
     }
 }
