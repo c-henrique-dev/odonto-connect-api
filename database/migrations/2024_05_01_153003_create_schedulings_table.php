@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('treatment_type');
             $table->text('comment');
             $table->dateTime('date_time');
+            $table->string('status');
+            $table->string('payment_status');
             $table->unsignedBigInteger('dentist_id');
             $table->unsignedBigInteger('patient_id');
             $table->timestamps();

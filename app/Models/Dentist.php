@@ -14,6 +14,9 @@ class Dentist extends Model
 
     protected $fillable = [
         'name',
+        'email',
+        'specialty',
+        'telephone'
     ];
 
     public function schedulings(): HasMany

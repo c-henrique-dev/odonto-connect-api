@@ -47,7 +47,11 @@ class MedicalRecordController extends Controller
             });
         }
 
-        $medicalRecords = $medicalRecords->with('patient')->paginate();
+        if ($request->has('start_date') && $request->has('end_date')) {
+            $medicalRecords->whereBetween('record_date', [$request->start_date, $request->end_date]);
+        }
+
+        $medicalRecords = $medicalRecords->with('patient')->paginate($request->size, ['*'], 'page', $request->page);
 
         return response()->json($medicalRecords, 200);
     }

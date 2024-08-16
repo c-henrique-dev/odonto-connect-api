@@ -21,6 +21,11 @@ class Scheduling extends Model
         return $this->belongsTo(Dentist::class);
     }
 
+    public function payment()
+    {
+        return $this->hasOne(Payment::class);
+    }
+
     static function rules()
     {
         return [

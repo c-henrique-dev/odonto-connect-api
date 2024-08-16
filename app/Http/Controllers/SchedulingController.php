@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\StatusEnum;
 use App\Models\Dentist;
 use App\Models\Patient;
 use App\Models\Scheduling;
@@ -26,6 +27,8 @@ class SchedulingController extends Controller
         $request->validate(Scheduling::rules(), Scheduling::feedbacks());
 
         $scheduling = new Scheduling();
+        $scheduling->status = StatusEnum::SCHEDULED;
+        $scheduling->payment_status = 'waiting';
         $scheduling->comment = $request->comment;
         $scheduling->treatment_type = $request->treatment_type;
         $scheduling->date_time = $request->date_time;
@@ -49,8 +52,34 @@ class SchedulingController extends Controller
             });
         }
 
-        $schedulings = $schedulings->with('patient')->paginate();
+        if ($request->has('status')) {
+            $schedulings->where('status', $request->status);
+        }
+
+        if ($request->has('payment_status')) {
+            $schedulings->where('payment_status', $request->payment_status);
+        }
+
+        if ($request->has('start_date') && $request->has('end_date')) {
+            $schedulings->whereBetween('date_time', [$request->start_date, $request->end_date]);
+        }
+
+        $schedulings = $schedulings->with('patient')->paginate($request->size, ['*'], 'page', $request->page);
 
         return response()->json($schedulings, 200);
+    }
+
+    public function cancel($id)
+    {
+        $scheduling = Scheduling::find($id);
+
+        if (!$scheduling) {
+            return response()->json(['message' => 'scheduling not found'], 404);
+        }
+
+        $scheduling->status = StatusEnum::CANCELED;
+        $scheduling->save();
+
+        return response()->json(['message' => 'updated successfuly scheduling'], 200);
     }
 }
