@@ -73,4 +73,16 @@ class DentistController extends Controller
 
         return response()->json($dentists, 200);
     }
+
+    public function delete($id)
+    {
+        $dentist = Dentist::find($id);
+
+        if ($dentist) {
+            $dentist->delete();
+            return response()->json("Dentista deletado com sucesso!", 200);
+        } else {
+            return response()->json("Dentista não encontrado!", 404);
+        }
+    }
 }

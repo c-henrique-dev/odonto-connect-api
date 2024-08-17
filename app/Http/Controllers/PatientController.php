@@ -72,16 +72,22 @@ class PatientController extends Controller
         return response()->json($patient, 200);
     }
 
-    public function index(Request $request)
+    public function index()
     {
-        $patients = Patient::query();
-
-        if ($request->has('name')) {
-            $patients->where('name', 'LIKE', '%'.$request->name.'%');
-        }
-
-        $patients = $patients->paginate();
+        $patients = Patient::with('address')->paginate();
 
         return response()->json($patients, 200);
+    }
+
+    public function delete($id)
+    {
+        $patient = Patient::find($id);
+
+        if ($patient) {
+            $patient->delete();
+            return response()->json("Paciente deletado com sucesso!", 200);
+        } else {
+            return response()->json("Paciente não encontrado!", 404);
+        }
     }
 }

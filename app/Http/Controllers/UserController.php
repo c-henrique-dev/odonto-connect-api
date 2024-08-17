@@ -4,10 +4,4 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class UserController extends Controller
-{
-
-    public function uploadImage(Request $request) {
-        
-    }
-}
+class UserController extends Controller {}
